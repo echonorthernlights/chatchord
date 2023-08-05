@@ -49,17 +49,17 @@ const Chat = () => {
           </div>
         </div>
       </main>
-      <div class="chat-form-container">
+      <div className="chat-form-container">
         <form id="chat-form">
           <input
             id="msg"
             type="text"
             placeholder="Enter Message"
             required
-            autocomplete="off"
+            autoComplete="off"
           />
-          <button class="btn">
-            <i class="fas fa-paper-plane"></i> Send
+          <button className="btn">
+            <i className="fas fa-paper-plane"></i> Send
           </button>
         </form>
       </div>
