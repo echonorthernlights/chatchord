@@ -10,11 +10,17 @@ import {
 } from "react-router-dom";
 import Home from "./components/Home";
 import Chat from "./components/Chat";
+import Test from "./components/Test";
+
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:5000");
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<Home />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route index={true} path="/" element={<Home socket={socket} />} />
+      <Route path="/chat/:room/:username/" element={<Chat socket={socket} />} />
+      {/* <Route path="/test" element={<Test />} /> */}
     </Route>
   )
 );

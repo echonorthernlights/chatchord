@@ -1,6 +1,19 @@
-import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+const Home = ({ socket }) => {
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState("");
 
-const Home = () => {
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    if (room !== "" && username !== "") {
+      socket.emit("join_room", room);
+      navigate(`/chat/${room}/${username}/`);
+    }
+  };
+
   return (
     <div className="join-container">
       <header className="join-header">
@@ -9,7 +22,7 @@ const Home = () => {
         </h1>
       </header>
       <main className="join-main">
-        <form action="chat.html">
+        <form onSubmit={onSubmitHandler}>
           <div className="form-control">
             <label htmlFor="username">Username</label>
             <input
@@ -18,11 +31,19 @@ const Home = () => {
               id="username"
               placeholder="Enter username..."
               required
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="form-control">
             <label htmlFor="room">Room</label>
-            <select name="room" id="room">
+            <select
+              name="room"
+              id="room"
+              value={room}
+              onChange={(e) => setRoom(e.target.value)}
+            >
+              <option value="">Select room ...</option>
               <option value="JavaScript">JavaScript</option>
               <option value="Python">Python</option>
               <option value="PHP">PHP</option>
