@@ -6,42 +6,28 @@ const Chat = ({ socket }) => {
   const [message, setMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
-  const receiveMessage = async () => {
-    await socket.on("receive_message", (data) => {
-      const receivedMessageObj = {
-        messageId: data.messageId,
-        username: data.username,
-        message: data.message,
-        createdAt: "DATE",
-      };
-      //console.log("=========> ", sendMessageObj);
-      setMessageList([...messageList, receivedMessageObj]);
-      console.log("=========> data /", data);
-    });
-  };
-
   useEffect(() => {
-    receiveMessage();
-    socket.on("receive_message", (data) => {
-      console.log("from frontend ", data);
-    });
+    const messageHandler = (data) => {
+      setMessageList((list) => [...list, data]);
+    };
+    socket.on("receive_message", messageHandler);
+    return () => {
+      socket.off("receive_message", messageHandler);
+    };
   }, [socket]);
 
-  // const leaveRoomHandler = () => {
-  //   socket.emit("disconnect");
-  // };
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const sendMessageObj = {
       messageId: uuidv4(),
       username,
       message,
-      createdAt: "date",
+      createdAt: new Date().toLocaleString(),
       room,
     };
     await socket.emit("send_message", sendMessageObj);
-    //console.log("=========/> ", sendMessageObj);
-    setMessageList([...messageList, sendMessageObj]);
+    setMessageList((list) => [...list, sendMessageObj]);
+    setMessage("");
   };
   return (
     <div className="chat-container">
